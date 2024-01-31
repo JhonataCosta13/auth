@@ -1,5 +1,6 @@
 package com.example.userAuth.AulaAutenticacao.model.DTO;
 
+import com.example.userAuth.AulaAutenticacao.model.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class UserInputDTO {
 
-    private String username;
+    private String nickname;
     private String password;
+    private Role role;
 }

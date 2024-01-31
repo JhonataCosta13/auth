@@ -1,26 +1,24 @@
 package com.example.userAuth.AulaAutenticacao.controller;
 
+import com.example.userAuth.AulaAutenticacao.model.DTO.TokenOutputDTO;
 import com.example.userAuth.AulaAutenticacao.model.DTO.UserInputDTO;
 import com.example.userAuth.AulaAutenticacao.model.User;
 import com.example.userAuth.AulaAutenticacao.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<?> userRegister(@RequestBody UserInputDTO userInputDTO){
 
         User userOutput = userService.saveUser(userInputDTO);
@@ -29,5 +27,20 @@ public class UserController {
                 buildAndExpand(userOutput.getId()).toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenOutputDTO> login(@RequestBody UserInputDTO userInputDTO){
+
+        TokenOutputDTO jwtToken = userService.login(userInputDTO);
+
+
+        return ResponseEntity.ok().body(jwtToken);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable("id") Long id){
+        User user = userService.getById(id);
+        return ResponseEntity.ok().body(user);
     }
 }
