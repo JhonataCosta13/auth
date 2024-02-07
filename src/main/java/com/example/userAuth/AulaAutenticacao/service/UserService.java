@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,8 +26,12 @@ public class UserService {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public User saveUser(UserInputDTO userInputDTO) {
         User userInput = modelMapper.map(userInputDTO, User.class);
+        userInput.setPassword(passwordEncoder.encode(userInput.getPassword()));
         userRepository.save(userInput);
         return userInput;
     }
@@ -37,7 +42,7 @@ public class UserService {
                         userInputDTO.getNickname(),
                         userInputDTO.getPassword()
                 ));
-        User user = userRepository.findByNickname(userInputDTO.getNickname());
+        User user = userRepository.findByNickname(userInputDTO.getNickname()).orElseThrow() ;
         String jwtToken = jwtService.generateToken(user);
         return TokenOutputDTO.builder().token(jwtToken).build();
     }

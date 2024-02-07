@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Function;
@@ -23,9 +22,10 @@ public class JwtService {
     private String jwtSecret;
 
     @Value("${jwt.expiration}")
-    private String jwtExpiration;
+    private Integer jwtExpiration;
 
     public String extractUsername(String token){
+
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -38,7 +38,7 @@ public class JwtService {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSigningKey())
-                .build().parseClaimsJwt(token)
+                .build().parseClaimsJws(token)
                 .getBody();
     }
 
@@ -53,14 +53,17 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
+
         return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
+
         return extractClaim(token, Claims::getExpiration);
     }
 
     public String generateToken(User user) {
+
         return generateTokenUser(new HashMap<>(), user);
     }
 

@@ -2,16 +2,16 @@ package com.example.userAuth.AulaAutenticacao.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
 
 @Getter
-@Service
+@Setter
 @Entity
 @Table(name = "usuario")
 public class User implements UserDetails{

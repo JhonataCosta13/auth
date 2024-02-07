@@ -25,12 +25,11 @@ public class SecurityConfiguration {
         http
                 .csrf()
                 .disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/user/register", "/user/login")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
+                .authorizeHttpRequests(
+                        auth -> auth
+                                .requestMatchers("/user/register", "/user/login").permitAll()
+                                .requestMatchers("/user/**").hasRole("ADMIN")
+                )
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

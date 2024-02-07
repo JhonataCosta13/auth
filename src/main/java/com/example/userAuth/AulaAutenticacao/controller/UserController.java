@@ -4,8 +4,10 @@ import com.example.userAuth.AulaAutenticacao.model.DTO.TokenOutputDTO;
 import com.example.userAuth.AulaAutenticacao.model.DTO.UserInputDTO;
 import com.example.userAuth.AulaAutenticacao.model.User;
 import com.example.userAuth.AulaAutenticacao.service.UserService;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -39,6 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> getUser(@PathVariable("id") Long id){
         User user = userService.getById(id);
         return ResponseEntity.ok().body(user);
